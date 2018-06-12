@@ -10,7 +10,7 @@ npm i needle-inject
 
 ## Usage
 
-**Important:** Make sure you have the flags `emitDecoratorMetadata` and `experimentalDecorators` and both set to true in tsconfig.json
+**Important:** When using the decorator, make sure you have the flags `emitDecoratorMetadata` and `experimentalDecorators` both set to true in tsconfig.json
 
 ```json
 {
