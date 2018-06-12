@@ -1,12 +1,13 @@
 {
   "name": "needle-inject",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Seamless dependency injection for Typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "./node_modules/.bin/tsc",
-    "test": "./node_modules/.bin/jest"
+    "test": "./node_modules/.bin/jest",
+    "prepare": "npm run build && npm run test && npm version patch"
   },
   "repository": {
     "type": "git",
