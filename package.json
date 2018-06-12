@@ -1,5 +1,5 @@
 {
-  "name": "needle",
+  "name": "needle-inject",
   "version": "0.1.0",
   "description": "Seamless dependency injection for Typescript",
   "main": "dist/index.js",

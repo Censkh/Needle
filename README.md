@@ -5,7 +5,7 @@
 From npm:
 
 ```commandline
-npm i needle
+npm i needle-inject
 ```
 
 ## Usage
@@ -26,10 +26,9 @@ Usage should be pretty straightforward, we have a service class we want to injec
 ```typescript
 class FooService {
     
-    procedure() : boolean {
+    procedure(obj : number) : boolean {
         // do complex logic
-        
-        return true
+        return obj % 2 != 0 
     }
     
 }
@@ -38,6 +37,28 @@ class FooService {
 To use FooService:
 
 ```typescript
+import {inject, provide} from "needle-inject"
+
+const service = provide(FooService)
+console.log(service.procedure(2))
+
+class Goopus {
+    
+    @inject
+    private fooService : FooService;
+    
+    constructor(obj : number) {
+        console.log(fooService.procedure(obj))
+    }
+    
+}
+
+let goopus = new Goopus(3)
+goopus.fooService.procedure(6)
+
+// : false
+// : true
+// : false
 
 ```
 
