@@ -1,0 +1,31 @@
+cache:
+  paths:
+    - node_modules/
+
+stages:
+  - setup
+  - build
+  - test
+
+setup:
+  stage: setup
+  script:
+    - yarn install
+
+build:
+  stage: build
+  dependencies:
+    - setup
+  script:
+    - npm run build
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist/
+
+test:
+  stage: test
+  dependencies:
+    - build
+  script:
+    - npm run test
