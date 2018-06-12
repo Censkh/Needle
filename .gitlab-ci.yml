@@ -1,4 +1,4 @@
-image: node:9
+image: node:alpine
 
 cache:
   paths:
@@ -16,8 +16,6 @@ setup:
 
 build:
   stage: build
-  dependencies:
-    - setup
   script:
     - npm run build
   artifacts:
