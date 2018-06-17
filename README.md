@@ -66,7 +66,7 @@ goopus.fooService.procedure(6)
 
 When managing state in React.js a lot of the time you want a reference to a global store. When using the very useful library [MobX](https://github.com/mobxjs/mobx) they provide a very unopinionated way to handle the passing of stateful objects. Here is where needle becomes useful!
 
-1. Create a store class that will store state:
+- 1. Create a store class that will store state:
 
 ```typescript
 
@@ -84,7 +84,7 @@ class AuthStore {
 
 ```
 
-2. Create a service that will hold this store:
+- 2. Create a service that will hold this store:
 
 ```typescript
 
@@ -108,7 +108,7 @@ export default class AuthService {
 
 ```
 
-3. Now we can inject AuthService, observe that store and any changes to that state will update our components:
+ - 3. Now we can inject AuthService, observe that store and any changes to that state will update our components:
 
 ```ts
 
