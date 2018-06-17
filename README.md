@@ -2,6 +2,8 @@
 
 [![npm](https://img.shields.io/npm/v/needle-inject.svg)](https://www.npmjs.com/package/needle-inject) [![repo](https://img.shields.io/badge/repo-gitlab-green.svg)](https://gitlab.com/09jwater/Needle)
 
+Seamless dependency injection for Typescript
+
 ## Installation
 
 From npm:
@@ -21,9 +23,11 @@ npm i needle-inject
 }
 ```
 
+**Any** class can be used as a singleton using needle, no extra decorations allowing for backwards compatiblity.
+
 ## Examples
 
-Usage should be pretty straightforward, we have a service class we want to inject into another class/function. To achieve this we do not have to touch the original class simply make sure it has an empty constructor.
+Usage should be pretty straightforward, we have a service class we want to inject into another class/function. To achieve this we do not have to touch the original class simply make sure it has a constructor that takes no arguments.
 
 ```typescript
 class FooService {
@@ -68,70 +72,76 @@ goopus.fooService.procedure(6)
 
 When managing state in React.js a lot of the time you want a reference to a global store. When using the very useful library [MobX](https://github.com/mobxjs/mobx) they provide a very unopinionated way to handle the passing of stateful objects. Here is where needle becomes useful!
 
-- 1. Create a store class that will store state:
+1. Create a store class that will store state:
 
-```typescript
+    ```typescript
 
-import { observable, computed } from "mobx"
+    import { observable, computed } from "mobx"
 
-// I store the state for auth sessions
-class AuthStore {
-    @observable userToken : String | null;
-    @observable userSession : any;
+    // I store the state for auth sessions
+    class AuthStore {
+        @observable userToken : String | null;
+        @observable userSession : any;
 
-    @computed get isLoggedIn() {
-        return this.userToken != null;
-    }
-}
-
-```
-
-- 2. Create a service that will hold this store:
-
-```typescript
-
-import { action } from "mobx";
-
-export default class AuthService {
-
-    store: AuthStore;
-
-    constructor() {
-        store = new AuthStore();
+        @computed get isLoggedIn() {
+            return this.userToken != null;
+        }
     }
 
-    @action
-    logIn() {
-        // Do complex logic here...
-        this.store.userToken = "TOKEN_FROM_AUTH";
+    ```
+
+2. Create a service that will hold this store:
+
+    ```typescript
+
+    import { action } from "mobx";
+
+    export default class AuthService {
+
+        store: AuthStore;
+
+        constructor() {
+            store = new AuthStore();
+        }
+
+        @action
+        logIn() {
+            // Do complex logic here...
+            this.store.userToken = "TOKEN_FROM_AUTH";
+        }
+
     }
 
-}
+    ```
 
-```
+3. Now we can inject AuthService, observe that store and any changes to that state will update our components:
 
- - 3. Now we can inject AuthService, observe that store and any changes to that state will update our components:
+    ```ts
 
-```ts
+    import * as React from "react";
+    import { observer } from "mobx-react";
+    import { inject } from "needle-inject";
+    import AuthService from "./AuthService";
 
-import * as React from "react";
-import { observer } from "mobx-react";
-import { inject } from "needle-inject";
-import AuthService from "./AuthService";
+    @observe
+    export default class MyComponent extends React.Component {
 
-@observe
-export default class MyComponent extends React.Component {
+        @inject
+        private authService : AuthService;
 
-    @inject
-    private authService : AuthService;
+        render() {
+            return this.authService.isLoggedIn ? <div>I am logged in!</div> : <a href="/login">Login?</a>;
+        }
 
-    render() {
-        return this.authService.isLoggedIn ? <div>I am logged in!</div> : <a href="/login">Login?</a>;
     }
 
-}
-
-```
-
+    ```
 
 ## How it works
+
+There isn't actually much going on under the hood. We keep a singleton `InjectionManager` which stores all the current mappings. When a component is requested we check if we already have one and serve it, otherwise creating a new instance and storing it for next time.
+
+## Limitations
+
+- I've yet to explore what happens when multiple libraries use needle at the same time. The problem I see arisng is two libraries using two impls of the same base class. Let's say they share a common lib with `AuthService` as an abstract base class yet they both use seperate services that inherit from this. One will clash with the other.
+- More complicated functionality has not yet being needed as part of my requirements but when they arise I fear they will complicate the current minimalist impl. Overthinking it? Probably.
