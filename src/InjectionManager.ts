@@ -31,6 +31,10 @@ export default class InjectionManager {
     }
 
     getMapping<T>(clazz: Class<T>): InjectionMapping<T> {
+        if (!clazz) {
+            throw new Error("Cannot get mapping of null/undefined class");
+        }
+
         if ((clazz as any).$$mapping) {
             return (clazz as any).$$mapping;
         }
