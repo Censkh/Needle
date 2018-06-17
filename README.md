@@ -1,4 +1,6 @@
+# Needle
 
+[![npm](https://img.shields.io/npm/v/needle-inject.svg)](https://www.npmjs.com/package/needle-inject) [![repo](https://img.shields.io/badge/repo-gitlab-green.svg)](https://gitlab.com/09jwater/Needle)
 
 ## Installation
 
