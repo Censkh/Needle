@@ -113,6 +113,10 @@ export default class MyComponent extends React.Component {
 
 ### Use case with React & MobX
 
+You can run an example app located in `examples/react-mobx`. Run `npm start` and navigate to localhost:1234 to view it.
+
+---
+
 When managing state in React.js a lot of the time you want a reference to a global store. When using the very useful library [MobX](https://github.com/mobxjs/mobx) they provide a very unopinionated way to handle the passing of stateful objects. Here is where needle becomes useful!
 
 1. Create a store class that will store state:
