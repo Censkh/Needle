@@ -36,36 +36,75 @@ class FooService {
         // do complex logic
         return obj % 2 != 0 
     }
+
+    requestThing() : Promise<any> {
+        // Send async call
+    }
     
 }
 ```
 
 To use FooService:
 
+- Using function injection:
+
+    ```typescript
+    import { provide } from "needle-inject"
+
+    const service = provide(FooService)
+    console.log(service.procedure(2))
+    ```
+- With class injection:
+
+    ```typescript
+    import { inject } from "needle-inject"
+
+    class Goopus {
+        
+        @inject
+        private fooService : FooService;
+        
+        constructor(obj : number) {
+            console.log(fooService.procedure(obj))
+        }
+        
+    }
+
+    let goopus = new Goopus(3)
+    goopus.fooService.procedure(6)
+    ```
+
+These run in succesion will product:
+```
+false
+true
+false
+```
+
+### With React
+
+Here is an example component that uses `FooService`:
+
 ```typescript
-import {inject, provide} from "needle-inject"
+import * as React from "react";
+import { inject } from "needle-inject"
 
-const service = provide(FooService)
-console.log(service.procedure(2))
 
-class Goopus {
-    
+export default class MyComponent extends React.Component {
+
     @inject
     private fooService : FooService;
-    
-    constructor(obj : number) {
-        console.log(fooService.procedure(obj))
+
+    render() {
+        return <div>
+            <Button onClick={this.fooService.requestThing()}>Send Request</Button>
+            <p>
+                Procedure of 3 is {this.fooService.procedure(3)}
+            </p>
+        </div>
     }
-    
+
 }
-
-let goopus = new Goopus(3)
-goopus.fooService.procedure(6)
-
-// : false
-// : true
-// : false
-
 ```
 
 ### Use case with React & MobX
@@ -75,7 +114,6 @@ When managing state in React.js a lot of the time you want a reference to a glob
 1. Create a store class that will store state:
 
     ```typescript
-
     import { observable, computed } from "mobx"
 
     // I store the state for auth sessions
@@ -87,13 +125,11 @@ When managing state in React.js a lot of the time you want a reference to a glob
             return this.userToken != null;
         }
     }
-
     ```
 
 2. Create a service that will hold this store:
 
     ```typescript
-
     import { action } from "mobx";
 
     export default class AuthService {
@@ -111,13 +147,11 @@ When managing state in React.js a lot of the time you want a reference to a glob
         }
 
     }
-
     ```
 
 3. Now we can inject AuthService, observe that store and any changes to that state will update our components:
 
     ```ts
-
     import * as React from "react";
     import { observer } from "mobx-react";
     import { inject } from "needle-inject";
@@ -134,7 +168,6 @@ When managing state in React.js a lot of the time you want a reference to a glob
         }
 
     }
-
     ```
 
 ## How it works
