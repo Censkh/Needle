@@ -50,14 +50,17 @@ To use FooService:
 
     ```typescript
     import { provide } from "needle-inject"
+    import FooService from "./FooService"
 
     const service = provide(FooService)
     console.log(service.procedure(2))
     ```
+    
 - With class injection:
 
     ```typescript
     import { inject } from "needle-inject"
+    import FooService from "./FooService"
 
     class Goopus {
         
@@ -74,7 +77,8 @@ To use FooService:
     goopus.fooService.procedure(6)
     ```
 
-These run in succesion will product:
+These run in succesion will produce:
+
 ```
 false
 true
@@ -88,7 +92,7 @@ Here is an example component that uses `FooService`:
 ```typescript
 import * as React from "react";
 import { inject } from "needle-inject"
-
+import FooService from "./FooService"
 
 export default class MyComponent extends React.Component {
 
@@ -151,7 +155,7 @@ When managing state in React.js a lot of the time you want a reference to a glob
 
 3. Now we can inject AuthService, observe that store and any changes to that state will update our components:
 
-    ```ts
+    ```typescript
     import * as React from "react";
     import { observer } from "mobx-react";
     import { inject } from "needle-inject";
@@ -172,9 +176,10 @@ When managing state in React.js a lot of the time you want a reference to a glob
 
 ## How it works
 
-There isn't actually much going on under the hood. We keep a singleton `InjectionManager` which stores all the current mappings. When a component is requested we check if we already have one and serve it, otherwise creating a new instance and storing it for next time.
+There isn't actually much going on under the hood. We keep a singleton `InjectionManager` which stores all the current mappings. When a class instance is requested we check if we already have one and serve it, otherwise creating a new instance and storing it for next time.
 
 ## Limitations
 
 - I've yet to explore what happens when multiple libraries use needle at the same time. The problem I see arisng is two libraries using two impls of the same base class. Let's say they share a common lib with `AuthService` as an abstract base class yet they both use seperate services that inherit from this. One will clash with the other.
+
 - More complicated functionality has not yet being needed as part of my requirements but when they arise I fear they will complicate the current minimalist impl. Overthinking it? Probably.

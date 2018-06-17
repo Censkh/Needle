@@ -1,13 +1,7 @@
 import InjectionManager from "./InjectionManager";
 import "reflect-metadata"
 
-/**
- *
- * @param target
- * @param key
- */
 export default function inject<T>(target: any, key: string): void {
-
 
     let obj: any = null;
 

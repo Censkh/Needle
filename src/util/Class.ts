@@ -1,1 +1,1 @@
-export type Class<T> = Function & { prototype: T }
+export type Class<T> = Function & { prototype: T };

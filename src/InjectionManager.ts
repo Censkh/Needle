@@ -6,6 +6,7 @@ export interface InjectionMapping<T> {
 }
 
 export default class InjectionManager {
+
     private static currentInstance: InjectionManager;
 
     static instance(): InjectionManager {
@@ -38,8 +39,8 @@ export default class InjectionManager {
         if ((clazz as any).$$mapping) {
             return (clazz as any).$$mapping;
         }
-        let mapping : InjectionMapping<any> | null = null;
-        for (let injectable of  this.mappings) {
+        let mapping: InjectionMapping<any> | null = null;
+        for (let injectable of this.mappings) {
             if (injectable.clazz.prototype instanceof clazz) {
                 mapping = injectable;
                 break;
@@ -48,6 +49,7 @@ export default class InjectionManager {
         if (mapping) {
             return mapping;
         }
+
         mapping = {clazz, value: new (clazz as any)()};
         (clazz as any).$$mapping = mapping;
         this.setMapping(mapping);
